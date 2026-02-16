@@ -1,0 +1,103 @@
+" Minimal vimrc – only what's needed for Zenburn colors
+
+" Tell Vim the terminal supports 256 colours (required for Zenburn)
+set t_Co=256
+
+" Enable syntax highlighting if the terminal has colours or we're in a GUI
+if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
+  syntax on
+endif
+
+" Load the Zenburn colourscheme
+colors zenburn
+
+
+" General edition options
+
+set backspace=2          " Backspace works like most editors
+set nobackup
+set nowritebackup
+set noswapfile           " No .swp files
+set history=50
+set ruler                " Show cursor position
+set showcmd              " Show partially typed commands
+set incsearch            " Incremental search
+set laststatus=2         " Always show status line
+set autowrite            " :write before :make, :!cmd, etc.
+set splitbelow           " Horizontal splits open below
+set splitright           " Vertical splits open to the right
+set number               " Line numbers
+set numberwidth=1
+set textwidth=80         " Hard wrap at 80 columns
+set colorcolumn=+1       " Highlight column 81
+set list listchars=tab:»·,trail:·,nbsp:·   " Visualise whitespace
+set expandtab            " Use spaces instead of tabs
+set tabstop=2 shiftwidth=2 shiftround   " Soft‑tabs, 2‑space indent
+set wildmode=list:longest,list:full   " Better command‑line completion
+
+
+" File-type handling
+
+filetype plugin indent on   " Enable filetype‑specific plugins and indenting
+
+
+" Cursor-position restore
+
+augroup vimrcEx
+  autocmd!
+  autocmd BufReadPost *
+        \ if &ft != 'gitcommit' && line("'\"") > 0 && line("'\"") <= line("$") |
+        \   exe "normal g`\"" |
+        \ endif
+augroup END
+
+
+" Usefule file-type shortcuts
+
+autocmd BufRead,BufNewFile Appraisals          set filetype=ruby
+autocmd BufRead,BufNewFile *.md                set filetype=markdown
+autocmd BufRead,BufNewFile .{jscs,jshint,eslint}rc  set filetype=json
+
+
+" Search & navigation helpers
+
+nnoremap <Leader><Leader> <C-^>   " Toggle between the last two files
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-h> <C-w>h
+nnoremap <C-l> <C-w>l
+
+
+" Test runner shortcuts (requires vim‑test)
+
+nnoremap <silent> <Leader>t  :TestFile<CR>
+nnoremap <silent> <Leader>s  :TestNearest<CR>
+nnoremap <silent> <Leader>l  :TestLast<CR>
+nnoremap <silent> <Leader>a  :TestSuite<CR>
+nnoremap <silent> <Leader>gt :TestVisit<CR>
+
+
+" Quick‑fix / lint navigation (requires ALE)
+
+nnoremap ]r :ALENextWrap<CR>
+nnoremap [r :ALEPreviousWrap<CR>
+
+
+" Spell‑checking helpers
+
+set spellfile=$HOME/.vim-spell-en.utf-8.add
+set complete+=kspell
+
+" Optional external tools
+" If you have the‑silver‑searcher (ag) installed and use CtrlP, these lines give you fast file‑finding
+
+if executable('ag')
+  set grepprg=ag\ --nogroup\ --nocolor
+  let g:ctrlp_user_command = 'ag --literal --files-with-matches --nocolor --hidden -g "" %s'
+  let g:ctrlp_use_caching = 0
+  if !exists(":Ag")
+    command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
+    nnoremap \ :Ag<SPACE>
+  endif
+endif
+
