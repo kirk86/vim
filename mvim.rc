@@ -11,6 +11,21 @@ endif
 " Load the Zenburn colourscheme
 colors zenburn
 
+" -------- Cursor appearance -------------------------------------------------
+" Give the cursor a bright background when in Normal mode
+hi Cursor      guifg=NONE guibg=#FFCC00 ctermfg=NONE ctermbg=226
+" In Insert mode use a slightly different colour so you can tell the mode
+hi iCursor     guifg=NONE guibg=#00A6FF ctermfg=NONE ctermbg=33
+
+" Highlight the line the cursor is on (helps locate the cursor)
+set cursorline
+hi CursorLine  guibg=#3F3F3F ctermbg=236   " dark gray, works with Zenburn
+
+" For terminals that support a different shape per mode
+if has('termguicolors')
+  set termguicolors
+endif
+
 
 " General edition options
 
