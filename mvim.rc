@@ -8,21 +8,6 @@ if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
   syntax on
 endif
 
-" Load the Zenburn colourscheme
-colors zenburn
-
-" -------- Cursor appearance -------------------------------------------------
-" Force the terminal cursor color to white (block/steady)
-if &term =~# 'xterm\|rxvt\|screen\|tmux'
-  " set cursor color (foreground/background) using OSC 12 for text cursor color
-  " and OSC 112 for iTerm2/Kitty/Alacritty compatibility where available
-  let g:cursor_white = "\e]12;#ffffff\a"
-  let g:cursor_white_alt = "\e]12;white\a"
-  " Send the sequence once at startup
-  autocmd VimEnter * silent! call system('printf "%s"' , g:cursor_white)
-endif
-
-
 
 " General edition options
 
