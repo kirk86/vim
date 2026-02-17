@@ -12,19 +12,16 @@ endif
 colors zenburn
 
 " -------- Cursor appearance -------------------------------------------------
-" Give the cursor a bright background when in Normal mode
-hi Cursor      guifg=NONE guibg=#FFCC00 ctermfg=NONE ctermbg=226
-" In Insert mode use a slightly different colour so you can tell the mode
-hi iCursor     guifg=NONE guibg=#00A6FF ctermfg=NONE ctermbg=33
-
-" Highlight the line the cursor is on (helps locate the cursor)
-set cursorline
-hi CursorLine  guibg=#3F3F3F ctermbg=236   " dark gray, works with Zenburn
-
-" For terminals that support a different shape per mode
-if has('termguicolors')
-  set termguicolors
+" Force the terminal cursor color to white (block/steady)
+if &term =~# 'xterm\|rxvt\|screen\|tmux'
+  " set cursor color (foreground/background) using OSC 12 for text cursor color
+  " and OSC 112 for iTerm2/Kitty/Alacritty compatibility where available
+  let g:cursor_white = "\e]12;#ffffff\a"
+  let g:cursor_white_alt = "\e]12;white\a"
+  " Send the sequence once at startup
+  autocmd VimEnter * silent! call system('printf "%s"' , g:cursor_white)
 endif
+
 
 
 " General edition options
